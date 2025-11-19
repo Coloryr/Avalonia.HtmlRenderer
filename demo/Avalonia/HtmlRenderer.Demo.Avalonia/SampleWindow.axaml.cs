@@ -13,19 +13,18 @@
 using Avalonia.Controls;
 using TheArtOfDev.HtmlRenderer.Demo.Common;
 
-namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
-{
-    /// <summary>
-    /// Interaction logic for SampleWindow.xaml
-    /// </summary>
-    public partial class SampleWindow : Window
-    {
-        public SampleWindow()
-        {
-            InitializeComponent();
+namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia;
 
-            _htmlLabel.Text = DemoUtils.SampleHtmlLabelText;
-            _htmlPanel.Text = DemoUtils.SampleHtmlPanelText;
-        }
+/// <summary>
+/// Interaction logic for SampleWindow.xaml
+/// </summary>
+public partial class SampleWindow : Window
+{
+    public SampleWindow()
+    {
+        InitializeComponent();
+
+        _htmlLabel.Text = DemoUtils.SampleHtmlLabelText;
+        _htmlPanel.Text = DemoUtils.SampleHtmlPanelText;
     }
 }

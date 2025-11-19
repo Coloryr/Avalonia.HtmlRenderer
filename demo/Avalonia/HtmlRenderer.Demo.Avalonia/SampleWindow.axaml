@@ -1,26 +1,53 @@
-﻿<Window x:Class="TheArtOfDev.HtmlRenderer.Demo.Avalonia.SampleWindow"
-        xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Avalonia="clr-namespace:TheArtOfDev.HtmlRenderer.Avalonia;assembly=Avalonia.HtmlRenderer"
-        Title="Sample Window" Height="300" Width="500" WindowStartupLocation="CenterOwner">
+﻿<Window
+    x:Class="TheArtOfDev.HtmlRenderer.Demo.Avalonia.SampleWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Avalonia="clr-namespace:Avalonia.HtmlRenderer;assembly=Avalonia.HtmlRenderer"
+    Title="Sample Window"
+    Width="500"
+    Height="300"
+    WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition Width="4*"/>
+            <ColumnDefinition Width="6*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="4*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Text="Html Label" Margin="10 0"/>
-        <Border Grid.Row="1" Grid.Column="0" Margin="10 5">
-            <Avalonia:HtmlLabel x:Name="_htmlLabel" AutoSizeHeightOnly="True" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="8" />
+        <TextBlock Margin="10,0" Text="Html Label" />
+        <Border
+            Grid.Row="1"
+            Grid.Column="0"
+            Margin="10,5">
+            <Avalonia:HtmlLabel
+                x:Name="_htmlLabel"
+                Margin="8"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                AutoSizeHeightOnly="True" />
         </Border>
-        <TextBlock Text="Html Panel" Grid.Row="2" Grid.Column="0" Margin="10 0"/>
-        <Avalonia:HtmlPanel x:Name="_htmlPanel" Grid.Row="3" Grid.Column="0" Margin="10 5" />
-        <GridSplitter Grid.Row="0" Grid.Column="1" Grid.RowSpan="4" Width="4" Background="#BFDBFF" ResizeBehavior="PreviousAndNext" VerticalAlignment="Stretch" />
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            Margin="10,0"
+            Text="Html Panel" />
+        <Avalonia:HtmlPanel
+            x:Name="_htmlPanel"
+            Grid.Row="3"
+            Grid.Column="0"
+            Margin="10,5" />
+        <GridSplitter
+            Grid.Row="0"
+            Grid.RowSpan="4"
+            Grid.Column="1"
+            Width="4"
+            VerticalAlignment="Stretch"
+            Background="#BFDBFF"
+            ResizeBehavior="PreviousAndNext" />
     </Grid>
 </Window>

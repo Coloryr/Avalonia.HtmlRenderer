@@ -15,73 +15,65 @@ using Avalonia.Media.Immutable;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 
-namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
+namespace Avalonia.HtmlRenderer.Adapters;
+
+/// <summary>
+/// Adapter for Avalonia pens objects for core.
+/// </summary>
+/// <remarks>
+/// Init.
+/// </remarks>
+/// <param name="brush">
+/// The actual Avalonia brush instance.
+/// </param>
+internal sealed class PenAdapter(IImmutableBrush brush) : RPen
 {
     /// <summary>
-    /// Adapter for Avalonia pens objects for core.
+    /// the width of the pen
     /// </summary>
-    internal sealed class PenAdapter : RPen
+    private double _width;
+
+    /// <summary>
+    /// the dash style of the pen
+    /// </summary>
+    private IDashStyle _dashStyle = null;
+
+    public override double Width
     {
-        /// <summary>
-        /// The actual Avalonia brush instance.
-        /// </summary>
-        private readonly IImmutableBrush _brush;
+        get { return _width; }
+        set { _width = value; }
+    }
 
-        /// <summary>
-        /// the width of the pen
-        /// </summary>
-        private double _width;
-
-        /// <summary>
-        /// the dash style of the pen
-        /// </summary>
-        private IDashStyle _dashStyle = null;
-
-        /// <summary>
-        /// Init.
-        /// </summary>
-        public PenAdapter(IImmutableBrush brush)
+    public override RDashStyle DashStyle
+    {
+        set
         {
-            _brush = brush;
-        }
-
-        public override double Width
-        {
-            get { return _width; }
-            set { _width = value; }
-        }
-
-        public override RDashStyle DashStyle
-        {
-            set
+            switch (value)
             {
-                switch (value)
-                {
-                    case RDashStyle.Dash:
-                        _dashStyle = global::Avalonia.Media.DashStyle.Dash;
-                        break;
-                    case RDashStyle.Dot:
-                        _dashStyle = global::Avalonia.Media.DashStyle.Dot;
-                        break;
-                    case RDashStyle.DashDot:
-                        _dashStyle = global::Avalonia.Media.DashStyle.DashDot;
-                        break;
-                    case RDashStyle.DashDotDot:
-                        _dashStyle = global::Avalonia.Media.DashStyle.DashDotDot;
-                        break;
-                    default:
-                        _dashStyle = null;
-                        break;
-                }
+                case RDashStyle.Dash:
+                    _dashStyle = Media.DashStyle.Dash;
+                    break;
+                case RDashStyle.Dot:
+                    _dashStyle = Media.DashStyle.Dot;
+                    break;
+                case RDashStyle.DashDot:
+                    _dashStyle = Media.DashStyle.DashDot;
+                    break;
+                case RDashStyle.DashDotDot:
+                    _dashStyle = Media.DashStyle.DashDotDot;
+                    break;
+                default:
+                    _dashStyle = null;
+                    break;
             }
         }
+    }
 
-        /// <summary>
-        /// Create the actual Avalonia pen instance.
-        /// </summary>
-        public IPen CreatePen()
-        {
-            return new ImmutablePen(_brush, _width, (ImmutableDashStyle)_dashStyle);
-        }
+    /// <summary>
+    /// Create the actual Avalonia pen instance.
+    /// </summary>
+    public IPen CreatePen()
+    {
+        return new ImmutablePen(brush, _width, (ImmutableDashStyle)_dashStyle);
     }
 }

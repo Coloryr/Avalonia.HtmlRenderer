@@ -10,17 +10,13 @@
 // - Sun Tsu,
 // "The Art of War"
 
-using System;
 using System.Diagnostics;
 using System.IO;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Platform;
 using Avalonia.Threading;
 using TheArtOfDev.HtmlRenderer.Demo.Common;
-using TheArtOfDev.HtmlRenderer.Avalonia;
 
 namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
 {
@@ -45,12 +41,14 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// </summary>
         private void OnOpenSampleWindow_click(object sender, RoutedEventArgs e)
         {
-            var w = new SampleWindow();
-            w.Width = Width * 0.8;
-            w.Height = Height * 0.8;
+            var w = new SampleWindow
+            {
+                Width = Width * 0.8,
+                Height = Height * 0.8
+            };
             _ = w.ShowDialog(this);
         }
-        
+
         /// <summary>
         /// Open the current html is external process - the default user browser.
         /// </summary>
@@ -58,7 +56,7 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         {
             var tmpFile = Path.ChangeExtension(Path.GetTempFileName(), ".htm");
             File.WriteAllText(tmpFile, _mainControl.GetHtml());
-            
+
             new Process
             {
                 StartInfo = new ProcessStartInfo(tmpFile)
@@ -81,9 +79,11 @@ namespace TheArtOfDev.HtmlRenderer.Demo.Avalonia
         /// </summary>
         private void OnGenerateImage_Click(object sender, RoutedEventArgs e)
         {
-            var w = new GenerateImageWindow(_mainControl.GetHtml());
-            w.Width = Width * 0.8;
-            w.Height = Height * 0.8;
+            var w = new GenerateImageWindow(_mainControl.GetHtml())
+            {
+                Width = Width * 0.8,
+                Height = Height * 0.8
+            };
             _ = w.ShowDialog(this);
         }
 

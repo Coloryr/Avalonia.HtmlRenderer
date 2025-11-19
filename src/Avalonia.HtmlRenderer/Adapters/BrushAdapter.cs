@@ -13,35 +13,27 @@
 using Avalonia.Media;
 using TheArtOfDev.HtmlRenderer.Adapters;
 
-namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
+namespace Avalonia.HtmlRenderer.Adapters;
+
+/// <summary>
+/// Adapter for Avalonia brushes.
+/// </summary>
+/// <remarks>
+/// Init.
+/// </remarks>
+/// <param name="brush">
+/// The actual Avalonia brush instance.
+/// </param>
+internal sealed class BrushAdapter(IImmutableBrush brush) : RBrush
 {
     /// <summary>
-    /// Adapter for Avalonia brushes.
+    /// The actual Avalonia brush instance.
     /// </summary>
-    internal sealed class BrushAdapter : RBrush
+    public IImmutableBrush Brush
     {
-        /// <summary>
-        /// The actual Avalonia brush instance.
-        /// </summary>
-        private readonly IImmutableBrush _brush;
-
-        /// <summary>
-        /// Init.
-        /// </summary>
-        public BrushAdapter(IImmutableBrush brush)
-        {
-            _brush = brush;
-        }
-
-        /// <summary>
-        /// The actual Avalonia brush instance.
-        /// </summary>
-        public IImmutableBrush Brush
-        {
-            get { return _brush; }
-        }
-
-        public override void Dispose()
-        { }
+        get { return brush; }
     }
+
+    public override void Dispose()
+    { }
 }

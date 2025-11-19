@@ -10,40 +10,19 @@
 // - Sun Tsu,
 // "The Art of War"
 
-namespace TheArtOfDev.HtmlRenderer.Demo.Common
+namespace TheArtOfDev.HtmlRenderer.Demo.Common;
+
+/// <summary>
+/// Used to hold a single html sample with its name.
+/// </summary>
+/// <remarks>
+/// Initializes a new instance of the <see cref="T:System.Object"/> class.
+/// </remarks>
+public sealed class HtmlSample(string name, string fullName, string html)
 {
-    /// <summary>
-    /// Used to hold a single html sample with its name.
-    /// </summary>
-    public sealed class HtmlSample
-    {
-        private readonly string _name;
-        private readonly string _fullName;
-        private readonly string _html;
+    public string Name => name;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
-        /// </summary>
-        public HtmlSample(string name, string fullName, string html)
-        {
-            _name = name;
-            _fullName = fullName;
-            _html = html;
-        }
+    public string FullName => fullName;
 
-        public string Name
-        {
-            get { return _name; }
-        }
-
-        public string FullName
-        {
-            get { return _fullName; }
-        }
-
-        public string Html
-        {
-            get { return _html; }
-        }
-    }
+    public string Html => html;
 }

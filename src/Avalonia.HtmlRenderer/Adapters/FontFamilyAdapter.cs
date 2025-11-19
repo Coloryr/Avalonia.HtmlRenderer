@@ -13,31 +13,23 @@
 using Avalonia.Media;
 using TheArtOfDev.HtmlRenderer.Adapters;
 
-namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
+namespace Avalonia.HtmlRenderer.Adapters;
+
+/// <summary>
+/// Adapter for Avalonia Font family object for core.
+/// </summary>
+/// <remarks>
+/// Init.
+/// </remarks>
+/// <param name="fontFamily">
+/// the underline win-forms font.
+/// </param>
+internal sealed class FontFamilyAdapter(FontFamily fontFamily) : RFontFamily
 {
     /// <summary>
-    /// Adapter for Avalonia Font family object for core.
+    /// the underline Avalonia font family.
     /// </summary>
-    internal sealed class FontFamilyAdapter : RFontFamily
-    {
-        /// <summary>
-        /// the underline win-forms font.
-        /// </summary>
-        private readonly FontFamily _fontFamily;
+    public FontFamily FontFamily => fontFamily;
 
-        /// <summary>
-        /// Init.
-        /// </summary>
-        public FontFamilyAdapter(FontFamily fontFamily)
-        {
-            _fontFamily = fontFamily;
-        }
-
-        /// <summary>
-        /// the underline Avalonia font family.
-        /// </summary>
-        public FontFamily FontFamily => _fontFamily;
-
-        public override string Name => _fontFamily.Name;
-    }
+    public override string Name => fontFamily.Name;
 }

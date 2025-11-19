@@ -13,47 +13,39 @@
 using Avalonia.Media.Imaging;
 using TheArtOfDev.HtmlRenderer.Adapters;
 
-namespace TheArtOfDev.HtmlRenderer.Avalonia.Adapters
+namespace Avalonia.HtmlRenderer.Adapters;
+
+/// <summary>
+/// Adapter for Avalonia Image object for core.
+/// </summary>
+/// <remarks>
+/// Init.
+/// </remarks>
+/// <param name="image">
+/// the underline Avalonia image.
+/// </param>
+internal sealed class ImageAdapter(Bitmap image) : RImage
 {
     /// <summary>
-    /// Adapter for Avalonia Image object for core.
+    /// the underline Avalonia image.
     /// </summary>
-    internal sealed class ImageAdapter : RImage
+    public Bitmap Image
     {
-        /// <summary>
-        /// the underline Avalonia image.
-        /// </summary>
-        private readonly Bitmap _image;
+        get { return image; }
+    }
 
-        /// <summary>
-        /// Init.
-        /// </summary>
-        public ImageAdapter(Bitmap image)
-        {
-            _image = image;
-        }
+    public override double Width
+    {
+        get { return image.PixelSize.Width; }
+    }
 
-        /// <summary>
-        /// the underline Avalonia image.
-        /// </summary>
-        public Bitmap Image
-        {
-            get { return _image; }
-        }
+    public override double Height
+    {
+        get { return image.PixelSize.Height; }
+    }
 
-        public override double Width
-        {
-            get { return _image.PixelSize.Width; }
-        }
-
-        public override double Height
-        {
-            get { return _image.PixelSize.Height; }
-        }
-
-        public override void Dispose()
-        {
-            _image.Dispose();
-        }
+    public override void Dispose()
+    {
+        image.Dispose();
     }
 }
