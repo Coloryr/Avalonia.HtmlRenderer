@@ -563,9 +563,9 @@ public class HtmlControl : Control
     {
         if (CheckAccess())
             // Visual invalidation should always go on the dispatcher.
-            Dispatcher.UIThread.InvokeAsync(() => OnRefresh(e));
+            OnRefresh(e);
         else
-            Dispatcher.UIThread.InvokeAsync(() => OnRefresh(e)).Wait();
+            Dispatcher.UIThread.Post(() => OnRefresh(e));
     }
 
     #endregion

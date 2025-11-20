@@ -3,6 +3,12 @@
   <PropertyGroup>
     <TargetFrameworks>net10.0</TargetFrameworks>
     <Nullable>disable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>11.3.9</Version>
+    <Authors>AvaloniaUI</Authors>
+    <Company>AvaloniaUI</Company>
+    <Copyright>AvaloniaUI</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +23,13 @@
   <ItemGroup>
     <Compile Include="../../external/HtmlRenderer/Core/**/*.cs" Link="External/Core/%(RecursiveDir)%(Filename)%(Extension)" />
     <Compile Include="../../external/HtmlRenderer/Adapters/**/*.cs" Link="External/Adapters/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
