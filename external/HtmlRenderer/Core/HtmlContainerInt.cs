@@ -896,7 +896,7 @@ public sealed class HtmlContainerInt : IDisposable
     /// <param name="type">the type of error to report</param>
     /// <param name="message">the error message</param>
     /// <param name="exception">optional: the exception that occured</param>
-    internal void ReportError(HtmlRenderErrorType type, string message, Exception exception = null)
+    internal void ReportError(HtmlRenderErrorType type, string message, Exception? exception = null)
     {
         try
         {

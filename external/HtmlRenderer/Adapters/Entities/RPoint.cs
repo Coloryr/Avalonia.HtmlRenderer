@@ -233,15 +233,12 @@ public struct RPoint(double x, double y)
     /// </summary>
     /// <returns>
     ///     This method returns true if <paramref name="obj" /> is a <see cref="RPoint" /> and has the same coordinates as this
-    ///     <see
-    ///         cref="T:System.Drawing.Point" />
-    ///     .
+    ///     <see  cref="T:System.Drawing.Point" /> .
     /// </returns>
-    /// <param name="obj">
-    ///     The <see cref="T:System.Object" /> to test.
+    /// <param name="obj"> The <see cref="T:System.Object" /> to test.
     /// </param>
     /// <filterpriority>1</filterpriority>
-    public override readonly bool Equals(object obj)
+    public override readonly bool Equals(object? obj)
     {
         if (obj is not RPoint pointF)
             return false;

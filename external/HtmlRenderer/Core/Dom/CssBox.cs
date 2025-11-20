@@ -39,17 +39,17 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <summary>
     /// the parent css box of this css box in the hierarchy
     /// </summary>
-    private CssBox _parentBox;
+    private CssBox? _parentBox;
 
     /// <summary>
     /// the root container for the hierarchy
     /// </summary>
-    protected HtmlContainerInt _htmlContainer;
+    protected HtmlContainerInt? _htmlContainer;
 
     /// <summary>
     /// the html tag that is associated with this css box, null if anonymous box
     /// </summary>
-    private readonly HtmlTag _htmltag;
+    private readonly HtmlTag? _htmltag;
 
     private readonly List<CssRect> _boxWords = [];
     private readonly List<CssBox> _boxes = [];
@@ -71,24 +71,23 @@ internal class CssBox : CssBoxProperties, IDisposable
     internal bool _tableFixed;
 
     protected bool _wordsSizeMeasured;
-    private CssBox _listItemBox;
-    private CssLineBox _firstHostingLineBox;
-    private CssLineBox _lastHostingLineBox;
+    private CssBox? _listItemBox;
+    private CssLineBox? _firstHostingLineBox;
+    private CssLineBox? _lastHostingLineBox;
 
     /// <summary>
     /// handler for loading background image
     /// </summary>
-    private ImageLoadHandler _imageLoadHandler;
+    private ImageLoadHandler? _imageLoadHandler;
 
     #endregion
-
 
     /// <summary>
     /// Init.
     /// </summary>
     /// <param name="parentBox">optional: the parent of this css box in html</param>
     /// <param name="tag">optional: the html tag associated with this css box</param>
-    public CssBox(CssBox parentBox, HtmlTag tag)
+    public CssBox(CssBox? parentBox, HtmlTag? tag)
     {
         if (parentBox != null)
         {
@@ -102,7 +101,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// Gets the HtmlContainer of the Box.
     /// WARNING: May be null.
     /// </summary>
-    public HtmlContainerInt HtmlContainer
+    public HtmlContainerInt? HtmlContainer
     {
         get { return _htmlContainer ??= _parentBox?.HtmlContainer; }
         set { _htmlContainer = value; }
@@ -111,7 +110,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <summary>
     /// Gets or sets the parent box of this box
     /// </summary>
-    public CssBox ParentBox
+    public CssBox? ParentBox
     {
         get { return _parentBox; }
         set
@@ -123,7 +122,7 @@ internal class CssBox : CssBoxProperties, IDisposable
 
             //Add to new parent
             if (value != null)
-                _parentBox.Boxes.Add(this);
+                _parentBox?.Boxes.Add(this);
         }
     }
 
@@ -241,7 +240,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <summary>
     /// Gets the HTMLTag that hosts this box
     /// </summary>
-    public HtmlTag HtmlTag
+    public HtmlTag? HtmlTag
     {
         get { return _htmltag; }
     }
@@ -348,7 +347,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <summary>
     /// Gets or sets the first linebox where content of this box appear
     /// </summary>
-    internal CssLineBox FirstHostingLineBox
+    internal CssLineBox? FirstHostingLineBox
     {
         get { return _firstHostingLineBox; }
         set { _firstHostingLineBox = value; }
@@ -357,7 +356,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <summary>
     /// Gets or sets the last linebox where content of this box appear
     /// </summary>
-    internal CssLineBox LastHostingLineBox
+    internal CssLineBox? LastHostingLineBox
     {
         get { return _lastHostingLineBox; }
         set { _lastHostingLineBox = value; }
@@ -369,7 +368,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <param name="tag">the html tag to define the box</param>
     /// <param name="parent">the box to add the new box to it as child</param>
     /// <returns>the new box</returns>
-    public static CssBox CreateBox(HtmlTag tag, CssBox parent = null)
+    public static CssBox CreateBox(HtmlTag tag, CssBox? parent = null)
     {
         ArgChecker.AssertArgNotNull(tag, "tag");
 
@@ -405,7 +404,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <param name="tag">optional: the html tag to define the box</param>
     /// <param name="before">optional: to insert as specific location in parent box</param>
     /// <returns>the new box</returns>
-    public static CssBox CreateBox(CssBox parent, HtmlTag tag = null, CssBox before = null)
+    public static CssBox CreateBox(CssBox parent, HtmlTag? tag = null, CssBox? before = null)
     {
         ArgChecker.AssertArgNotNull(parent, "parent");
 
@@ -446,7 +445,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <param name="tag">optional: the html tag to define the box</param>
     /// <param name="before">optional: to insert as specific location in parent box</param>
     /// <returns>the new block box</returns>
-    public static CssBox CreateBlock(CssBox parent, HtmlTag tag = null, CssBox before = null)
+    public static CssBox CreateBlock(CssBox parent, HtmlTag? tag = null, CssBox? before = null)
     {
         ArgChecker.AssertArgNotNull(parent, "parent");
 
@@ -468,7 +467,7 @@ internal class CssBox : CssBoxProperties, IDisposable
         }
         catch (Exception ex)
         {
-            HtmlContainer.ReportError(HtmlRenderErrorType.Layout, "Exception in box layout", ex);
+            HtmlContainer?.ReportError(HtmlRenderErrorType.Layout, "Exception in box layout", ex);
         }
     }
 
@@ -496,7 +495,7 @@ internal class CssBox : CssBoxProperties, IDisposable
                     var rect = ContainingBlock.ClientRectangle;
                     rect.X -= 2;
                     rect.Width += 2;
-                    if (!IsFixed)
+                    if (!IsFixed && HtmlContainer is { })
                     {
                         //rect.Offset(new RPoint(-HtmlContainer.Location.X, -HtmlContainer.Location.Y));
                         rect.Offset(HtmlContainer.ScrollOffset);
@@ -520,7 +519,7 @@ internal class CssBox : CssBoxProperties, IDisposable
         }
         catch (Exception ex)
         {
-            HtmlContainer.ReportError(HtmlRenderErrorType.Paint, "Exception in box paint", ex);
+            HtmlContainer?.ReportError(HtmlRenderErrorType.Paint, "Exception in box paint", ex);
         }
     }
 
@@ -530,12 +529,12 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <param name="before"></param>
     public void SetBeforeBox(CssBox before)
     {
-        int index = _parentBox.Boxes.IndexOf(before);
+        int index = _parentBox?.Boxes.IndexOf(before) ?? -1;
         if (index < 0)
             throw new Exception("before box doesn't exist on parent");
 
-        _parentBox.Boxes.Remove(this);
-        _parentBox.Boxes.Insert(index, this);
+        _parentBox?.Boxes.Remove(this);
+        _parentBox?.Boxes.Insert(index, this);
     }
 
     /// <summary>
@@ -747,7 +746,7 @@ internal class CssBox : CssBoxProperties, IDisposable
 
         CreateListItemBox(g);
 
-        if (!IsFixed)
+        if (!IsFixed && HtmlContainer is { })
         {
             var actualWidth = Math.Max(GetMinimumWidth() + GetWidthMarginDeep(this), Size.Width < 90999 ? ActualRight - HtmlContainer.Root.Location.X : 0);
             HtmlContainer.ActualSize = CommonUtils.Max(HtmlContainer.ActualSize, new RSize(actualWidth, ActualBottom - HtmlContainer.Root.Location.Y));
@@ -762,10 +761,11 @@ internal class CssBox : CssBoxProperties, IDisposable
     {
         if (!_wordsSizeMeasured)
         {
-            if (BackgroundImage != CssConstants.None && _imageLoadHandler == null)
+            if (BackgroundImage != CssConstants.None && _imageLoadHandler == null 
+                && HtmlContainer is { } && HtmlTag is { })
             {
                 _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnImageLoadComplete);
-                _imageLoadHandler.LoadImage(BackgroundImage, HtmlTag?.Attributes);
+                _imageLoadHandler.LoadImage(BackgroundImage, HtmlTag.Attributes);
             }
 
             MeasureWordSpacing(g);
@@ -789,7 +789,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// Get the parent of this css properties instance.
     /// </summary>
     /// <returns></returns>
-    protected override sealed CssBoxProperties GetParent()
+    protected override sealed CssBoxProperties? GetParent()
     {
         return _parentBox;
     }
@@ -800,6 +800,11 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <returns></returns>
     private int GetIndexForList()
     {
+        if (ParentBox == null)
+        {
+            return 0;
+        }
+
         bool reversed = !string.IsNullOrEmpty(ParentBox.GetAttribute("reversed"));
         if (!int.TryParse(ParentBox.GetAttribute("start"), out int index))
         {
@@ -886,7 +891,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <param name="b"></param>
     /// <param name="line"> </param>
     /// <returns></returns>
-    internal static CssRect FirstWordOccourence(CssBox b, CssLineBox line)
+    internal static CssRect? FirstWordOccourence(CssBox b, CssLineBox line)
     {
         if (b.Words.Count == 0 && b.Boxes.Count == 0)
         {
@@ -908,7 +913,7 @@ internal class CssBox : CssBoxProperties, IDisposable
         {
             foreach (CssBox bb in b.Boxes)
             {
-                CssRect w = FirstWordOccourence(bb, line);
+                var w = FirstWordOccourence(bb, line);
 
                 if (w != null)
                 {
@@ -950,7 +955,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     internal double GetMinimumWidth()
     {
         double maxWidth = 0;
-        CssRect maxWidthWord = null;
+        CssRect? maxWidthWord = null;
         GetMinimumWidth_LongestWord(this, ref maxWidth, ref maxWidthWord);
 
         double padding = 0f;
@@ -974,7 +979,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <param name="maxWidth"> </param>
     /// <param name="maxWidthWord"> </param>
     /// <returns></returns>
-    private static void GetMinimumWidth_LongestWord(CssBox box, ref double maxWidth, ref CssRect maxWidthWord)
+    private static void GetMinimumWidth_LongestWord(CssBox box, ref double maxWidth, ref CssRect? maxWidthWord)
     {
         if (box.Words.Count > 0)
         {
@@ -1004,10 +1009,11 @@ internal class CssBox : CssBoxProperties, IDisposable
         double sum = 0f;
         if (box.Size.Width > 90999 || (box.ParentBox != null && box.ParentBox.Size.Width > 90999))
         {
-            while (box != null)
+            CssBox? box1 = box;
+            while (box1 != null)
             {
-                sum += box.ActualMarginLeft + box.ActualMarginRight;
-                box = box.ParentBox;
+                sum += box1.ActualMarginLeft + box1.ActualMarginRight;
+                box1 = box1.ParentBox;
             }
         }
         return sum;
@@ -1134,7 +1140,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <summary>
     /// Inherits inheritable values from parent.
     /// </summary>
-    internal new void InheritStyle(CssBox box = null, bool everything = false)
+    internal new void InheritStyle(CssBox? box = null, bool everything = false)
     {
         base.InheritStyle(box ?? ParentBox, everything);
     }
@@ -1144,7 +1150,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// </summary>
     /// <param name="prevSibling">the previous box under the same parent</param>
     /// <returns>Resulting top margin</returns>
-    protected double MarginTopCollapse(CssBoxProperties prevSibling)
+    protected double MarginTopCollapse(CssBoxProperties? prevSibling)
     {
         double value;
         if (prevSibling != null)
@@ -1172,18 +1178,18 @@ internal class CssBox : CssBoxProperties, IDisposable
 
     public bool BreakPage()
     {
-        var container = this.HtmlContainer;
+        var container = HtmlContainer;
 
-        if (this.Size.Height >= container.PageSize.Height)
+        if (container == null || Size.Height >= container.PageSize.Height)
             return false;
 
-        var remTop = (this.Location.Y - container.MarginTop) % container.PageSize.Height;
-        var remBottom = (this.ActualBottom - container.MarginTop) % container.PageSize.Height;
+        var remTop = (Location.Y - container.MarginTop) % container.PageSize.Height;
+        var remBottom = (ActualBottom - container.MarginTop) % container.PageSize.Height;
 
         if (remTop > remBottom)
         {
             var diff = container.PageSize.Height - remTop;
-            this.Location = new RPoint(this.Location.X, this.Location.Y + diff + 1);
+            Location = new RPoint(Location.X, Location.Y + diff + 1);
             return true;
         }
 
@@ -1218,7 +1224,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     private double MarginBottomCollapse()
     {
         double margin = 0;
-        if (ParentBox != null && ParentBox.Boxes.IndexOf(this) == ParentBox.Boxes.Count - 1 && _parentBox.ActualMarginBottom < 0.1)
+        if (_parentBox != null && _parentBox.Boxes.IndexOf(this) == _parentBox.Boxes.Count - 1 && _parentBox.ActualMarginBottom < 0.1)
         {
             var lastChildBottomMargin = _boxes[^1].ActualMarginBottom;
             margin = Height == "auto" ? Math.Max(ActualMarginBottom, lastChildBottomMargin) : lastChildBottomMargin;
@@ -1269,7 +1275,7 @@ internal class CssBox : CssBoxProperties, IDisposable
             var clip = g.GetClip();
             RRect[] rects = [.. areas];
             RPoint offset = RPoint.Empty;
-            if (!IsFixed)
+            if (!IsFixed && HtmlContainer != null)
             {
                 offset = HtmlContainer.ScrollOffset;
             }
@@ -1346,7 +1352,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     {
         if (rect.Width > 0 && rect.Height > 0)
         {
-            RBrush brush = null;
+            RBrush? brush = null;
 
             if (BackgroundGradient != CssConstants.None)
             {
@@ -1363,13 +1369,13 @@ internal class CssBox : CssBoxProperties, IDisposable
                 // if (isLast)
                 //  rectangle.Width -= ActualWordSpacing + CssUtils.GetWordEndWhitespace(ActualFont);
 
-                RGraphicsPath roundrect = null;
+                RGraphicsPath? roundrect = null;
                 if (IsRounded)
                 {
                     roundrect = RenderUtils.GetRoundRect(g, rect, ActualCornerNw, ActualCornerNe, ActualCornerSe, ActualCornerSw);
                 }
 
-                object prevMode = null;
+                object? prevMode = null;
                 if (HtmlContainer != null && !HtmlContainer.AvoidGeometryAntialias && IsRounded)
                 {
                     prevMode = g.SetAntiAliasSmoothingMode();
@@ -1430,7 +1436,7 @@ internal class CssBox : CssBoxProperties, IDisposable
 
                             g.DrawRectangle(GetSelectionBackBrush(g, false), rect.X, rect.Y, rect.Width, rect.Height);
 
-                            if (HtmlContainer.SelectionForeColor != RColor.Empty && (word.SelectedStartOffset > 0 || word.SelectedEndIndexOffset > -1))
+                            if (HtmlContainer?.SelectionForeColor != RColor.Empty && (word.SelectedStartOffset > 0 || word.SelectedEndIndexOffset > -1))
                             {
                                 g.PushClipExclude(rect);
                                 g.DrawFormattedLine(word.Line, ActualColor, wordPoint, new RSize(word.Width, word.Height), isRtl);
@@ -1527,7 +1533,7 @@ internal class CssBox : CssBoxProperties, IDisposable
     private void OnImageLoadComplete(RImage image, RRect rectangle, bool async)
     {
         if (image != null && async)
-            HtmlContainer.RequestRefresh(false);
+            HtmlContainer?.RequestRefresh(false);
     }
 
     /// <summary>
@@ -1535,7 +1541,11 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// </summary>
     protected RColor GetSelectionForeBrush()
     {
-        return HtmlContainer.SelectionForeColor != RColor.Empty ? HtmlContainer.SelectionForeColor : ActualColor;
+        if (HtmlContainer?.SelectionForeColor is { } color && color != RColor.Empty)
+        {
+            return color;
+        }
+        return ActualColor;
     }
 
     /// <summary>
@@ -1545,13 +1555,13 @@ internal class CssBox : CssBoxProperties, IDisposable
     /// <param name="forceAlpha">used for images so they will have alpha effect</param>
     protected RBrush GetSelectionBackBrush(RGraphics g, bool forceAlpha)
     {
-        var backColor = HtmlContainer.SelectionBackColor;
-        if (backColor != RColor.Empty)
+        var backColor = HtmlContainer?.SelectionBackColor;
+        if (backColor is { } back && back != RColor.Empty)
         {
-            if (forceAlpha && backColor.A > 180)
-                return g.GetSolidBrush(RColor.FromArgb(180, backColor.R, backColor.G, backColor.B));
+            if (forceAlpha && back.A > 180)
+                return g.GetSolidBrush(RColor.FromArgb(180, back.R, back.G, back.B));
             else
-                return g.GetSolidBrush(backColor);
+                return g.GetSolidBrush(back);
         }
         else
         {
@@ -1561,18 +1571,18 @@ internal class CssBox : CssBoxProperties, IDisposable
 
     protected override RFont GetCachedFont(string fontFamily, double fsize, RFontStyle st)
     {
-        return HtmlContainer.Adapter.GetFont(fontFamily, fsize, st);
+        return HtmlContainer!.Adapter.GetFont(fontFamily, fsize, st);
     }
 
     protected override RColor GetActualColor(string colorStr)
     {
-        return HtmlContainer.CssParser.ParseColor(colorStr);
+        return HtmlContainer!.CssParser.ParseColor(colorStr);
     }
 
     protected override RPoint GetActualLocation(string X, string Y)
     {
-        var left = CssValueParser.ParseLength(X, this.HtmlContainer.PageSize.Width, this, null);
-        var top = CssValueParser.ParseLength(Y, this.HtmlContainer.PageSize.Height, this, null);
+        var left = CssValueParser.ParseLength(X, HtmlContainer!.PageSize.Width, this, null);
+        var top = CssValueParser.ParseLength(Y, HtmlContainer!.PageSize.Height, this, null);
         return new RPoint(left, top);
     }
 

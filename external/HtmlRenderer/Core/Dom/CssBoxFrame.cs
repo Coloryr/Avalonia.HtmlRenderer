@@ -45,22 +45,22 @@ internal sealed partial class CssBoxFrame : CssBox
     /// <summary>
     /// the title of the video
     /// </summary>
-    private string _videoTitle;
+    private string? _videoTitle;
 
     /// <summary>
     /// the url of the video thumbnail image
     /// </summary>
-    private string _videoImageUrl;
+    private string? _videoImageUrl;
 
     /// <summary>
     /// link to the video on the site
     /// </summary>
-    private string _videoLinkUrl;
+    private string? _videoLinkUrl;
 
     /// <summary>
     /// handler used for image loading by source
     /// </summary>
-    private ImageLoadHandler _imageLoadHandler;
+    private ImageLoadHandler? _imageLoadHandler;
 
     /// <summary>
     /// is image load is finished, used to know if no image is found
@@ -83,13 +83,12 @@ internal sealed partial class CssBoxFrame : CssBox
 
     #endregion
 
-
     /// <summary>
     /// Init.
     /// </summary>
     /// <param name="parent">the parent box of this box</param>
     /// <param name="tag">the html tag data of this box</param>
-    public CssBoxFrame(CssBox parent, HtmlTag tag)
+    public CssBoxFrame(CssBox? parent, HtmlTag tag)
         : base(parent, tag)
     {
         _imageWord = new CssRectImage(this);
@@ -140,7 +139,6 @@ internal sealed partial class CssBoxFrame : CssBox
         base.Dispose();
     }
 
-
     #region Private methods
 
     /// <summary>
@@ -151,7 +149,7 @@ internal sealed partial class CssBoxFrame : CssBox
         try
         {
             // Try to get oEmbed endpoint
-            string oembedEndpoint = await DiscoverOEmbedEndpointAsync(uri);
+            var oembedEndpoint = await DiscoverOEmbedEndpointAsync(uri);
 
             if (string.IsNullOrEmpty(oembedEndpoint))
             {
@@ -162,9 +160,9 @@ internal sealed partial class CssBoxFrame : CssBox
                 {
                     _imageLoadingComplete = true;
                     SetErrorBorder();
-                    HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "No oEmbed endpoint found for: " + uri,
+                    HtmlContainer?.ReportError(HtmlRenderErrorType.Iframe, "No oEmbed endpoint found for: " + uri,
                         null);
-                    HtmlContainer.RequestRefresh(false);
+                    HtmlContainer?.RequestRefresh(false);
                     return;
                 }
             }
@@ -180,15 +178,15 @@ internal sealed partial class CssBoxFrame : CssBox
         {
             _imageLoadingComplete = true;
             SetErrorBorder();
-            HtmlContainer.ReportError(HtmlRenderErrorType.Iframe, "Failed to get oEmbed data: " + uri, ex);
-            HtmlContainer.RequestRefresh(false);
+            HtmlContainer?.ReportError(HtmlRenderErrorType.Iframe, "Failed to get oEmbed data: " + uri, ex);
+            HtmlContainer?.RequestRefresh(false);
         }
     }
 
     /// <summary>
     /// Discovers oEmbed endpoint by checking the HTML page's link tags
     /// </summary>
-    private static async Task<string> DiscoverOEmbedEndpointAsync(Uri uri)
+    private static async Task<string?> DiscoverOEmbedEndpointAsync(Uri uri)
     {
         try
         {

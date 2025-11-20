@@ -23,7 +23,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Entities;
 /// <param name="type">the type of error to report</param>
 /// <param name="message">the error message</param>
 /// <param name="exception">optional: the exception that occurred</param>
-public sealed class HtmlRenderErrorEventArgs(HtmlRenderErrorType type, string message, Exception exception = null) : EventArgs
+public sealed class HtmlRenderErrorEventArgs(HtmlRenderErrorType type, string message, Exception? exception = null) : EventArgs
 {
     /// <summary>
     /// error type that is reported
@@ -44,7 +44,7 @@ public sealed class HtmlRenderErrorEventArgs(HtmlRenderErrorType type, string me
     /// <summary>
     /// the exception that occurred (can be null)
     /// </summary>
-    public Exception Exception
+    public Exception? Exception
     {
         get { return exception; }
     }

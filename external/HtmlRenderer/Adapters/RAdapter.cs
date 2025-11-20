@@ -56,17 +56,17 @@ public abstract class RAdapter
     /// <summary>
     /// default CSS parsed data singleton
     /// </summary>
-    private CssData _defaultCssData;
+    private CssData? _defaultCssData;
 
     /// <summary>
     /// image used to draw loading image icon
     /// </summary>
-    private RImage _loadImage;
+    private RImage? _loadImage;
 
     /// <summary>
     /// image used to draw error image icon
     /// </summary>
-    private RImage _errorImage;
+    private RImage? _errorImage;
 
     #endregion
 
@@ -104,7 +104,7 @@ public abstract class RAdapter
     /// <returns>pen instance</returns>
     public RPen GetPen(RColor color)
     {
-        if (!_penCache.TryGetValue(color, out RPen pen))
+        if (!_penCache.TryGetValue(color, out var pen))
         {
             _penCache[color] = pen = CreatePen(color);
         }
@@ -118,7 +118,7 @@ public abstract class RAdapter
     /// <returns>brush instance</returns>
     public RBrush GetSolidBrush(RColor color)
     {
-        if (!_brushesCache.TryGetValue(color, out RBrush brush))
+        if (!_brushesCache.TryGetValue(color, out var brush))
         {
             _brushesCache[color] = brush = CreateSolidBrush(color);
         }
@@ -205,7 +205,7 @@ public abstract class RAdapter
     /// <summary>
     /// Get image to be used while HTML image is loading.
     /// </summary>
-    public RImage GetLoadingImage()
+    public RImage? GetLoadingImage()
     {
         if (_loadImage == null)
         {
@@ -219,7 +219,7 @@ public abstract class RAdapter
     /// <summary>
     /// Get image to be used if HTML image load failed.
     /// </summary>
-    public RImage GetLoadingFailedImage()
+    public RImage? GetLoadingFailedImage()
     {
         if (_errorImage == null)
         {
@@ -301,7 +301,7 @@ public abstract class RAdapter
     /// <param name="name">the name of the image for save dialog</param>
     /// <param name="extension">the extension of the image for save dialog</param>
     /// <param name="control">optional: the control to show the dialog on</param>
-    public void SaveToFile(RImage image, string name, string extension, RControl control = null)
+    public void SaveToFile(RImage image, string name, string extension, RControl? control = null)
     {
         SaveToFileInt(image, name, extension, control);
     }
@@ -463,7 +463,7 @@ public abstract class RAdapter
     /// <param name="name">the name of the image for save dialog</param>
     /// <param name="extension">the extension of the image for save dialog</param>
     /// <param name="control">optional: the control to show the dialog on</param>
-    protected virtual void SaveToFileInt(RImage image, string name, string extension, RControl control = null)
+    protected virtual void SaveToFileInt(RImage image, string name, string extension, RControl? control = null)
     {
         throw new NotImplementedException();
     }
