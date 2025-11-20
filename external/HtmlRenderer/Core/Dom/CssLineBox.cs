@@ -227,7 +227,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             }
             else
             {
-                CssRect firstw = b.FirstWordOccourence(b, this);
+                CssRect firstw = CssBox.FirstWordOccourence(b, this);
 
                 if (firstw != null)
                 {

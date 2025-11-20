@@ -13,7 +13,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Avalonia.Controls.Documents;
 using TheArtOfDev.HtmlRenderer.Adapters;
 using TheArtOfDev.HtmlRenderer.Adapters.Entities;
 using TheArtOfDev.HtmlRenderer.Core.Entities;
@@ -52,11 +51,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         private readonly HtmlTag _htmltag;
 
-        private readonly List<CssRect> _boxWords = new List<CssRect>();
-        private readonly List<CssBox> _boxes = new List<CssBox>();
-        private readonly List<CssLineBox> _lineBoxes = new List<CssLineBox>();
-        private readonly List<CssLineBox> _parentLineBoxes = new List<CssLineBox>();
-        private readonly Dictionary<CssLineBox, RRect> _rectangles = new Dictionary<CssLineBox, RRect>();
+        private readonly List<CssRect> _boxWords = [];
+        private readonly List<CssBox> _boxes = [];
+        private readonly List<CssLineBox> _lineBoxes = [];
+        private readonly List<CssLineBox> _parentLineBoxes = [];
+        private readonly Dictionary<CssLineBox, RRect> _rectangles = [];
 
         /// <summary>
         /// the inner text of the box
@@ -105,7 +104,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public HtmlContainerInt HtmlContainer
         {
-            get { return _htmlContainer ?? (_htmlContainer = _parentBox != null ? _parentBox.HtmlContainer : null); }
+            get { return _htmlContainer ??= _parentBox?.HtmlContainer; }
             set { _htmlContainer = value; }
         }
 
@@ -118,8 +117,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             set
             {
                 //Remove from last parent
-                if (_parentBox != null)
-                    _parentBox.Boxes.Remove(this);
+                _parentBox?.Boxes.Remove(this);
 
                 _parentBox = value;
 
@@ -142,7 +140,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public bool IsBrElement
         {
-            get {
+            get
+            {
                 return _htmltag != null && _htmltag.Name.Equals("br", StringComparison.InvariantCultureIgnoreCase);
             }
         }
@@ -305,7 +304,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                 return true;
             }
         }
-        
+
         /// <summary>
         /// Gets the line-boxes of this box (if block box)
         /// </summary>
@@ -425,8 +424,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <returns>the new block box</returns>
         public static CssBox CreateBlock()
         {
-            var box = new CssBox(null, null);
-            box.Display = CssConstants.Block;
+            var box = new CssBox(null, null)
+            {
+                Display = CssConstants.Block
+            };
             return box;
         }
 
@@ -575,22 +576,59 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                     if (endIdx > startIdx)
                     {
                         if (preserveSpaces)
-                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(startIdx, endIdx - startIdx).ToString()).AsMemory(), false, false));
+                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text[startIdx..endIdx].ToString()).AsMemory(), false, false));
                     }
                     else
                     {
                         endIdx = startIdx;
-                        while (endIdx < text.Length && !char.IsWhiteSpace(text[endIdx]) && text[endIdx] != '-' && WordBreak != CssConstants.BreakAll && !CommonUtils.IsAsianCharecter(text[endIdx]))
+                        while (endIdx < text.Length
+                            && !char.IsWhiteSpace(text[endIdx])
+                            && text[endIdx] != '-'
+                            && WordBreak != CssConstants.BreakAll
+                            && !CommonUtils.IsAsianCharecter(text[endIdx]))
                             endIdx++;
 
-                        if (endIdx < text.Length && (text[endIdx] == '-' || WordBreak == CssConstants.BreakAll || CommonUtils.IsAsianCharecter(text[endIdx])))
-                            endIdx++;
+                        //if (endIdx < text.Length
+                        //    && (text[endIdx] == '-'
+                        //        || WordBreak == CssConstants.BreakAll
+                        //        || CommonUtils.IsAsianCharecter(text[endIdx])))
+                        //{
+                        //    endIdx++;
+                        //}
+                        //if (endIdx > startIdx)
+                        //{
+                        //    var hasSpaceBefore = !preserveSpaces && startIdx > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(text[startIdx - 1]);
+                        //    var hasSpaceAfter = !preserveSpaces && endIdx < text.Length && char.IsWhiteSpace(text[endIdx]);
+                        //    _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text[startIdx..endIdx].ToString()).AsMemory(), hasSpaceBefore, hasSpaceAfter));
+                        //}
 
-                        if (endIdx > startIdx)
+                        if (endIdx < text.Length
+                            && (text[endIdx] == '-'
+                                || WordBreak == CssConstants.BreakAll
+                                || CommonUtils.IsAsianCharecter(text[endIdx])))
                         {
-                            var hasSpaceBefore = !preserveSpaces && (startIdx > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(text[startIdx - 1]));
-                            var hasSpaceAfter = !preserveSpaces && (endIdx < text.Length && char.IsWhiteSpace(text[endIdx]));
-                            _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text.Slice(startIdx, endIdx - startIdx).ToString()).AsMemory(), hasSpaceBefore, hasSpaceAfter));
+                            if (endIdx > startIdx)
+                            {
+                                var hasSpaceBefore = !preserveSpaces && startIdx > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(text[startIdx - 1]);
+                                var hasSpaceAfter = !preserveSpaces && endIdx < text.Length && char.IsWhiteSpace(text[endIdx]);
+                                _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text[startIdx..endIdx].ToString()).AsMemory(), hasSpaceBefore, hasSpaceAfter));
+                            }
+                            else
+                            {
+                                endIdx++;
+                                var hasSpaceBefore = !preserveSpaces && startIdx > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(text[startIdx - 1]);
+                                var hasSpaceAfter = !preserveSpaces && endIdx < text.Length && char.IsWhiteSpace(text[endIdx]);
+                                _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text[startIdx..endIdx].ToString()).AsMemory(), hasSpaceBefore, hasSpaceAfter));
+                            }
+                        }
+                        else
+                        {
+                            if (endIdx > startIdx)
+                            {
+                                var hasSpaceBefore = !preserveSpaces && startIdx > 0 && _boxWords.Count == 0 && char.IsWhiteSpace(text[startIdx - 1]);
+                                var hasSpaceAfter = !preserveSpaces && endIdx < text.Length && char.IsWhiteSpace(text[endIdx]);
+                                _boxWords.Add(new CssRectWord(this, HtmlUtils.DecodeHtml(text[startIdx..endIdx].ToString()).AsMemory(), hasSpaceBefore, hasSpaceAfter));
+                            }
                         }
                     }
 
@@ -612,8 +650,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// </summary>
         public virtual void Dispose()
         {
-            if (_imageLoadHandler != null)
-                _imageLoadHandler.Dispose();
+            _imageLoadHandler?.Dispose();
 
             foreach (var childBox in Boxes)
             {
@@ -663,12 +700,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                     double left;
                     double top;
 
-                    if (Position == CssConstants.Fixed)
-                    {
-                        left = 0;
-                        top = 0;
-                    }
-                    else
+                    if (Position != CssConstants.Fixed)
                     {
                         left = ContainingBlock.Location.X + ContainingBlock.ActualPaddingLeft + ActualMarginLeft + ContainingBlock.ActualBorderLeftWidth;
                         top = (prevSibling == null && ParentBox != null ? ParentBox.ClientTop : ParentBox == null ? Location.Y : 0) + MarginTopCollapse(prevSibling) + (prevSibling != null ? prevSibling.ActualBottom + prevSibling.ActualBorderBottomWidth : 0);
@@ -733,7 +765,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                 if (BackgroundImage != CssConstants.None && _imageLoadHandler == null)
                 {
                     _imageLoadHandler = new ImageLoadHandler(HtmlContainer, OnImageLoadComplete);
-                    _imageLoadHandler.LoadImage(BackgroundImage, HtmlTag != null ? HtmlTag.Attributes : null);
+                    _imageLoadHandler.LoadImage(BackgroundImage, HtmlTag?.Attributes);
                 }
 
                 MeasureWordSpacing(g);
@@ -769,8 +801,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         private int GetIndexForList()
         {
             bool reversed = !string.IsNullOrEmpty(ParentBox.GetAttribute("reversed"));
-            int index;
-            if (!int.TryParse(ParentBox.GetAttribute("start"), out index))
+            if (!int.TryParse(ParentBox.GetAttribute("start"), out int index))
             {
                 if (reversed)
                 {
@@ -855,7 +886,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="b"></param>
         /// <param name="line"> </param>
         /// <returns></returns>
-        internal CssRect FirstWordOccourence(CssBox b, CssLineBox line)
+        internal static CssRect FirstWordOccourence(CssBox b, CssLineBox line)
         {
             if (b.Words.Count == 0 && b.Boxes.Count == 0)
             {
@@ -988,7 +1019,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="startBox"></param>
         /// <param name="currentMaxBottom"></param>
         /// <returns></returns>
-        internal double GetMaximumBottom(CssBox startBox, double currentMaxBottom)
+        internal static double GetMaximumBottom(CssBox startBox, double currentMaxBottom)
         {
             foreach (var line in startBox.Rectangles.Keys)
             {
@@ -1058,8 +1089,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                 }
 
                 // remove the last word padding
-                if (box.Words.Count > 0 && !box.Words[box.Words.Count - 1].HasSpaceAfter)
-                    maxSum -= box.Words[box.Words.Count - 1].ActualWordSpacing;
+                if (box.Words.Count > 0 && !box.Words[^1].HasSpaceAfter)
+                    maxSum -= box.Words[^1].ActualWordSpacing;
             }
             else
             {
@@ -1189,10 +1220,10 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             double margin = 0;
             if (ParentBox != null && ParentBox.Boxes.IndexOf(this) == ParentBox.Boxes.Count - 1 && _parentBox.ActualMarginBottom < 0.1)
             {
-                var lastChildBottomMargin = _boxes[_boxes.Count - 1].ActualMarginBottom;
+                var lastChildBottomMargin = _boxes[^1].ActualMarginBottom;
                 margin = Height == "auto" ? Math.Max(ActualMarginBottom, lastChildBottomMargin) : lastChildBottomMargin;
             }
-            return Math.Max(ActualBottom, _boxes[_boxes.Count - 1].ActualBottom + margin + ActualPaddingBottom + ActualBorderBottomWidth);
+            return Math.Max(ActualBottom, _boxes[^1].ActualBottom + margin + ActualPaddingBottom + ActualBorderBottomWidth);
         }
 
         /// <summary>
@@ -1201,9 +1232,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="amount"></param>
         internal void OffsetTop(double amount)
         {
-            List<CssLineBox> lines = new List<CssLineBox>();
-            foreach (CssLineBox line in Rectangles.Keys)
-                lines.Add(line);
+            List<CssLineBox> lines = [.. Rectangles.Keys];
 
             foreach (CssLineBox line in lines)
             {
@@ -1221,8 +1250,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                 b.OffsetTop(amount);
             }
 
-            if (_listItemBox != null)
-                _listItemBox.OffsetTop(amount);
+            _listItemBox?.OffsetTop(amount);
 
             Location = new RPoint(Location.X, Location.Y + amount);
         }
@@ -1237,9 +1265,9 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
             {
                 var clipped = RenderUtils.ClipGraphicsByOverflow(g, this);
 
-                var areas = Rectangles.Count == 0 ? new List<RRect>(new[] { Bounds }) : new List<RRect>(Rectangles.Values);
+                var areas = Rectangles.Count == 0 ? new List<RRect>([Bounds]) : [.. Rectangles.Values];
                 var clip = g.GetClip();
-                RRect[] rects = areas.ToArray();
+                RRect[] rects = [.. areas];
                 RPoint offset = RPoint.Empty;
                 if (!IsFixed)
                 {
@@ -1291,14 +1319,11 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                 if (clipped)
                     g.PopClip();
 
-                if (_listItemBox != null)
-                {
-                    _listItemBox.Paint(g);
-                }
+                _listItemBox?.Paint(g);
             }
         }
 
-        private bool IsRectVisible(RRect rect, RRect clip)
+        private static bool IsRectVisible(RRect rect, RRect clip)
         {
             rect.X -= 2;
             rect.Width += 2;
@@ -1344,7 +1369,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                         roundrect = RenderUtils.GetRoundRect(g, rect, ActualCornerNw, ActualCornerNe, ActualCornerSe, ActualCornerSw);
                     }
 
-                    Object prevMode = null;
+                    object prevMode = null;
                     if (HtmlContainer != null && !HtmlContainer.AvoidGeometryAntialias && IsRounded)
                     {
                         prevMode = g.SetAntiAliasSmoothingMode();
@@ -1361,8 +1386,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
 
                     g.ReturnPreviousSmoothingMode(prevMode);
 
-                    if (roundrect != null)
-                        roundrect.Dispose();
+                    roundrect?.Dispose();
                     brush.Dispose();
                 }
 
@@ -1422,7 +1446,7 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
                             }
                             else
                             {
-                                //                            g.DrawRectangle(HtmlContainer.Adapter.GetPen(RColor.Black), wordPoint.X, wordPoint.Y, word.Width - 1, word.Height - 1);
+                                // g.DrawRectangle(HtmlContainer.Adapter.GetPen(RColor.Black), wordPoint.X, wordPoint.Y, word.Width - 1, word.Height - 1);
                                 g.DrawFormattedLine(word.Line, ActualColor, wordPoint, new RSize(word.Width, word.Height), isRtl);
                             }
                         }
@@ -1480,9 +1504,8 @@ namespace TheArtOfDev.HtmlRenderer.Core.Dom
         /// <param name="gap"></param>
         internal void OffsetRectangle(CssLineBox lineBox, double gap)
         {
-            if (Rectangles.ContainsKey(lineBox))
+            if (Rectangles.TryGetValue(lineBox, out RRect r))
             {
-                var r = Rectangles[lineBox];
                 Rectangles[lineBox] = new RRect(r.X, r.Y + gap, r.Width, r.Height);
             }
         }

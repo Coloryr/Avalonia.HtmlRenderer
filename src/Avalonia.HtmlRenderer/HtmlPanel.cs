@@ -56,8 +56,7 @@ public class HtmlPanel : HtmlControl
     {
         _verticalScrollBar = new ScrollBar
         {
-            Orientation = Orientation.Vertical,
-            Width = 18
+            Orientation = Orientation.Vertical
         };
         _verticalScrollBar.Scroll += OnScrollBarScroll;
         VisualChildren.Add(_verticalScrollBar);
@@ -65,8 +64,7 @@ public class HtmlPanel : HtmlControl
 
         _horizontalScrollBar = new ScrollBar
         {
-            Orientation = Orientation.Horizontal,
-            Height = 18
+            Orientation = Orientation.Horizontal
         };
         _horizontalScrollBar.Scroll += OnScrollBarScroll;
         VisualChildren.Add(_horizontalScrollBar);

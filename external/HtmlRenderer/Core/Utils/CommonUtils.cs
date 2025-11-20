@@ -68,20 +68,20 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
             { "Ճ", "Մ", "Յ", "Ն", "Շ", "Ո", "Չ", "Պ", "Ջ" }
         };
 
-        private static readonly string[] _hiraganaDigitsTable = new[]
-        {
+        private static readonly string[] _hiraganaDigitsTable =
+        [
             "あ", "ぃ", "ぅ", "ぇ", "ぉ", "か", "き", "く", "け", "こ", "さ", "し", "す", "せ", "そ", "た", "ち", "つ", "て", "と", "な", "に", "ぬ", "ね", "の", "は", "ひ", "ふ", "へ", "ほ", "ま", "み", "む", "め", "も", "ゃ", "ゅ", "ょ", "ら", "り", "る", "れ", "ろ", "ゎ", "ゐ", "ゑ", "を", "ん"
-        };
+        ];
 
-        private static readonly string[] _satakanaDigitsTable = new[]
-        {
+        private static readonly string[] _satakanaDigitsTable =
+        [
             "ア", "イ", "ウ", "エ", "オ", "カ", "キ", "ク", "ケ", "コ", "サ", "シ", "ス", "セ", "ソ", "タ", "チ", "ツ", "テ", "ト", "ナ", "ニ", "ヌ", "ネ", "ノ", "ハ", "ヒ", "フ", "ヘ", "ホ", "マ", "ミ", "ム", "メ", "モ", "ヤ", "ユ", "ヨ", "ラ", "リ", "ル", "レ", "ロ", "ワ", "ヰ", "ヱ", "ヲ", "ン"
-        };
+        ];
 
         /// <summary>
         /// the temp path to use for local files
         /// </summary>
-        public static String _tempPath;
+        public static string _tempPath;
 
         #endregion
 
@@ -93,7 +93,22 @@ namespace TheArtOfDev.HtmlRenderer.Core.Utils
         /// <returns>true - Asian char, false - otherwise</returns>
         public static bool IsAsianCharecter(char ch)
         {
-            return ch >= 0x4e00 && ch <= 0xFA2D;
+            // 检查中日韩统一表意文字范围
+            if (ch >= 0x4e00 && ch <= 0xFA2D)
+                return true;
+
+            // 检查中文标点符号范围
+            if (ch >= 0x3000 && ch <= 0x303F) // CJK标点符号
+                return true;
+
+            // 检查全角标点符号范围
+            if (ch >= 0xFF00 && ch <= 0xFFEF) // 全角字符和半角字符
+            {
+                // 全角标点符号包括：，。；等
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
