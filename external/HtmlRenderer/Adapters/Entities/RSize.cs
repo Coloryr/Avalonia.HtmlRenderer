@@ -278,12 +278,15 @@ public struct RSize
     /// </summary>
     /// <returns>
     ///     This method returns true if <paramref name="obj" /> is a <see cref="RSize" /> and has the same width and height as this
-    ///     <see cref="RSize" />; otherwise, false.
+    ///     <see
+    ///         cref="RSize" />
+    ///     ; otherwise, false.
     /// </returns>
-    /// <param name="obj">The <see cref="T:System.Object" /> to test.
+    /// <param name="obj">
+    ///     The <see cref="T:System.Object" /> to test.
     /// </param>
     /// <filterpriority>1</filterpriority>
-    public override readonly bool Equals(object? obj)
+    public override readonly bool Equals(object obj)
     {
         if (obj is not RSize sizeF)
             return false;

@@ -284,7 +284,7 @@ public struct RRect
     /// <param name="obj">
     ///     The <see cref="T:System.Object" /> to test.
     /// </param>
-    public override readonly bool Equals(object? obj)
+    public override readonly bool Equals(object obj)
     {
         if (obj is not RRect rectangleF)
             return false;

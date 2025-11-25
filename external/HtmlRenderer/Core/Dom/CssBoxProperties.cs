@@ -1249,7 +1249,7 @@ internal abstract class CssBoxProperties
     /// </summary>
     public RFont ActualParentFont
     {
-        get { return GetParent() is { } par ? par.ActualFont : ActualFont; }
+        get { return GetParent() == null ? ActualFont : GetParent().ActualFont; }
     }
 
     /// <summary>
@@ -1284,8 +1284,8 @@ internal abstract class CssBoxProperties
 
                 double parentSize = CssConstants.FontSize;
 
-                if (GetParent() is { } par)
-                    parentSize = par.ActualFont.Size;
+                if (GetParent() != null)
+                    parentSize = GetParent().ActualFont.Size;
                 var fsize = FontSize switch
                 {
                     CssConstants.Medium => CssConstants.FontSize,
@@ -1401,7 +1401,7 @@ internal abstract class CssBoxProperties
     /// Get the parent of this css properties instance.
     /// </summary>
     /// <returns></returns>
-    protected abstract CssBoxProperties? GetParent();
+    protected abstract CssBoxProperties GetParent();
 
     /// <summary>
     /// Gets the height of the font in the specified units
@@ -1433,7 +1433,7 @@ internal abstract class CssBoxProperties
     /// <param name="style">optional: the style to set</param>
     /// <param name="width">optional: the width to set</param>
     /// <param name="color">optional: the color to set</param>
-    protected void SetAllBorders(string? style = null, string? width = null, string? color = null)
+    protected void SetAllBorders(string style = null, string width = null, string color = null)
     {
         if (style != null)
             BorderLeftStyle = BorderTopStyle = BorderRightStyle = BorderBottomStyle = style;
@@ -1464,7 +1464,7 @@ internal abstract class CssBoxProperties
     /// </summary>
     /// <param name="everything">Set to true to inherit all CSS properties instead of only the ineritables</param>
     /// <param name="p">Box to inherit the properties</param>
-    protected void InheritStyle(CssBox? p, bool everything)
+    protected void InheritStyle(CssBox p, bool everything)
     {
         if (p != null)
         {
